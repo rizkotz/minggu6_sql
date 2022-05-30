@@ -2,28 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:minggu6_sql/models/item.dart';
 
 class EntryForm extends StatefulWidget {
-  final Item item;
-
+  final Item? item;
   EntryForm(this.item);
-
   @override
   EntryFormState createState() => EntryFormState(this.item);
 }
 
 //class controller
 class EntryFormState extends State<EntryForm> {
-  Item item;
-
+  Item? item;
   EntryFormState(this.item);
   TextEditingController nameController = TextEditingController();
   TextEditingController priceController = TextEditingController();
+  TextEditingController stockController = TextEditingController();
+  TextEditingController kodeBarangController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     //kondisi
     if (item != null) {
-      nameController.text = item.name;
-      priceController.text = item.price.toString();
+      nameController.text = item!.name;
+      priceController.text = item!.price.toString();
+      stockController.text = item!.stock.toString();
+      kodeBarangController.text = item!.kodeBarang;
     }
     //rubah
     return Scaffold(
@@ -35,7 +36,7 @@ class EntryFormState extends State<EntryForm> {
         padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
         child: ListView(
           children: <Widget>[
-            //nama
+            // nama
             Padding(
               padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
               child: TextField(
@@ -47,12 +48,10 @@ class EntryFormState extends State<EntryForm> {
                     borderRadius: BorderRadius.circular(5.0),
                   ),
                 ),
-                onChanged: (value) {
-                  //
-                },
+                onChanged: (value) {},
               ),
             ),
-            //harga
+            // harga
             Padding(
               padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
               child: TextField(
@@ -64,9 +63,37 @@ class EntryFormState extends State<EntryForm> {
                     borderRadius: BorderRadius.circular(5.0),
                   ),
                 ),
-                onChanged: (value) {
-                  //
-                },
+                onChanged: (value) {},
+              ),
+            ),
+            // stock
+            Padding(
+              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+              child: TextField(
+                controller: stockController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'Stock',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                ),
+                onChanged: (value) {},
+              ),
+            ),
+            // kode barang
+            Padding(
+              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+              child: TextField(
+                controller: kodeBarangController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'Kode Barang',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                ),
+                onChanged: (value) {},
               ),
             ),
             // tombol button
@@ -74,7 +101,7 @@ class EntryFormState extends State<EntryForm> {
               padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
               child: Row(
                 children: <Widget>[
-                  //tombol simpan
+                  // tombol simpan
                   Expanded(
                     child: RaisedButton(
                       color: Theme.of(context).primaryColorDark,
@@ -85,15 +112,21 @@ class EntryFormState extends State<EntryForm> {
                       ),
                       onPressed: () {
                         if (item == null) {
-                          //tambah data
-                          item = Item(nameController.text,
-                              int.parse(priceController.text));
+                          // tambah data
+                          item = Item(
+                            nameController.text,
+                            int.parse(priceController.text),
+                            int.parse(stockController.text),
+                            kodeBarangController.text,
+                          );
                         } else {
-                          //ubah data
-                          item.name = nameController.text;
-                          item.price = int.parse(priceController.text);
+                          // ubah data
+                          item?.name = nameController.text;
+                          item?.price = int.parse(priceController.text);
+                          item?.stock = int.parse(stockController.text);
+                          item?.kodeBarang = kodeBarangController.text;
                         }
-                        //kembali ke layar sebelumnya dengan membawa objek item
+                        // kembali ke layar sebelumnya dengan membawa objek item
                         Navigator.pop(context, item);
                       },
                     ),
@@ -101,7 +134,7 @@ class EntryFormState extends State<EntryForm> {
                   Container(
                     width: 5.0,
                   ),
-                  //tombol batal
+                  // tombol batal
                   Expanded(
                     child: RaisedButton(
                       color: Theme.of(context).primaryColorDark,
